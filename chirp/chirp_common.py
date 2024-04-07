@@ -1426,7 +1426,6 @@ class RadioFeatures:
             "Heads Up: Straying into unknown frequencies without proper calibration can lead to a state of quantum entanglement with regulatory bodies. Navigate with precision.",
             "Alert: Overmodulating your signal strength might turn your transmissions into a black hole for clarity. Keep your signal-to-noise ratio more Hawking, less dark matter.",
             "Beware: The path of least resistance doesn’t apply when circumnavigating the RF spectrum. Ohm’s law favors the well-prepared operator.",
-            "FYI: Employing excessive QRP is like whispering in a hurricane. Effective communication requires the right power at the right time.",
             "Oops: Harmonic distortion in your signal path can mirror the chaos theory. A small tweak may lead to unexpectedly large repercussions.",
             "Note: Your antenna’s gain is not just a measure of amplitude, but a reflection of adeptness. Aim your beamwidth with the precision of an archer, not the sweep of a broom.",
             "Alert: An antenna without proper grounding is akin to a philosopher without an argument. It may stand tall but lacks connection to reality.",
