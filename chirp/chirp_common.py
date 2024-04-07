@@ -22,6 +22,7 @@ import logging
 import math
 import re
 import sys
+import random
 
 from chirp import errors, memmap, CHIRP_VERSION
 
@@ -1398,6 +1399,45 @@ class RadioFeatures:
     def __getitem__(self, name):
         return self.__dict__[name]
 
+    def random_warning(self):
+        warnings = [
+            "Proceed with caution: Setting the frequency out of band might make our equipment think it's in a parallel universe!",
+            "Warning: Changing frequencies to the forbidden zone could lead to unexpected time travel. Your future self thanks you for not messing up.",
+            "Beware: Dialing beyond the limit might not open a portal to Narnia. Please adjust responsibly.",
+            "Alert: Going out of band could make the equipment sing 'I Want to Break Free.' Let's keep the band together, shall we?",
+            "Heads up: Frequencies out of band may lead to spontaneous karaoke performances by our devices. Proceed if you dare!",
+            "Caution: Setting the frequency out of bounds might just summon the ghost of Nikola Tesla. Adjust at your own risk.",
+            "Note: If you tweak the frequency too far, you might end up on the pirate radio. Ahoy, mateys!",
+            "Warning: Out of band frequencies are known to cause unexpected disco infernos. Boogie at your own risk.",
+            "Attention: Frequencies out of band could be a call to aliens. Let's not invite an intergalactic party without snacks ready.",
+            "FYI: Overstepping the frequency boundary might just start a digital revolution. Are you ready to lead?",
+            "Warning: Tweaking the frequency out of band could trigger a sing-along of 'Lost in Space.' Stay grounded, please.",
+            "Heads Up: Frequencies out of band are the Bermuda Triangle of signals. Enter at your own peril.",
+            "Alert: Setting frequencies out of band could result in a cosmic opera performance. Earplugs not included.",
+            "Caution: Frequencies gone rogue might lead to a quantum entanglement. No PhD included for untangling.",
+            "Warning: Trying to 'ham' it up on unauthorized frequencies may result in a 'bacon' of trouble. Keep it crispy, not risky!",
+            "Caution: Hamming outside your frequency slice could sandwich you between interference and the FCC. Lettuce stay within our range!",
+            "Heads up: Overcooking your signal on the ham bands might lead to getting grilled by other operators. Medium rare adjustments only, please!",
+            "Alert: Unlicensed transmissions are a recipe for disaster. Don't go baking bad on the airwaves!",
+            "Beware: If you're trying to butter up to signals out of your band, you might just get toasted. Spread responsibly!",
+            "Oops: Dialing into the ham spectrum without a license is like entering a kitchen without knowing how to cook. Recipe for chaos!",
+            "Watch Out: Ham radios are not meant for roasting. Keep your transmissions well-marinated in etiquette and regulations.",
+            "Caution: Engaging in frequency fiddling without finesse may result in a spectrum of trouble. Harmonize with regulations to avoid discord.",
+            "Heads Up: Straying into unknown frequencies without proper calibration can lead to a state of quantum entanglement with regulatory bodies. Navigate with precision.",
+            "Alert: Overmodulating your signal strength might turn your transmissions into a black hole for clarity. Keep your signal-to-noise ratio more Hawking, less dark matter.",
+            "Beware: The path of least resistance doesn’t apply when circumnavigating the RF spectrum. Ohm’s law favors the well-prepared operator.",
+            "FYI: Employing excessive QRP is like whispering in a hurricane. Effective communication requires the right power at the right time.",
+            "Oops: Harmonic distortion in your signal path can mirror the chaos theory. A small tweak may lead to unexpectedly large repercussions.",
+            "Note: Your antenna’s gain is not just a measure of amplitude, but a reflection of adeptness. Aim your beamwidth with the precision of an archer, not the sweep of a broom.",
+            "Alert: An antenna without proper grounding is akin to a philosopher without an argument. It may stand tall but lacks connection to reality.",
+            "Heads Up: Treating the ionosphere as your personal echo chamber without observing the band plan is like disregarding gravitational waves in space-time. It warps the fabric of communication.",
+            "Caution: Overloading your receiver with signals is like drowning in a sea of noise. Tune in to the right frequency to avoid getting lost in the static.",
+            "Warning: The RF spectrum is not a playground for signal hopping. Stay on the right frequency to avoid a collision course with interference.",
+            "Attention: Transmitting without proper modulation is like speaking in tongues. Your message may be lost in translation.",
+            "Heads Up: Ignoring band plans is like disregarding traffic signals. You might not cause an accident, but you’ll certainly raise some eyebrows.",
+        ]
+        return random.choice(warnings)
+
     def validate_memory(self, mem):
         """Return a list of warnings and errors that will be encountered
         if trying to set @mem on the current radio"""
@@ -1472,16 +1512,18 @@ class RadioFeatures:
             msgs.append(msg)
 
         if self.valid_bands:
-            valid = True
+            valid = False
             for lo, hi in self.valid_bands:
                 if lo <= mem.freq < hi:
                     valid = True
                     break
             if not valid:
-                msg = ValidationError(
+                valid = True
+                msg = ValidationWarning(
                     (
                         "Frequency {freq} is out "
-                        "of supported range WHAT ARE YOU TRYIN TO DO!?"
+                        "of the supported range for this radio.\n"
+                        "\n" + self.random_warning()
                     ).format(freq=format_freq(mem.freq))
                 )
                 msgs.append(msg)
@@ -1503,10 +1545,13 @@ class RadioFeatures:
                     valid = True
                     break
             if not valid:
-                msg = ValidationError(
-                    ("Tx freq {freq} is out " "of supported range").format(
-                        freq=format_freq(freq)
-                    )
+                valid = True
+                msg = ValidationWarning(
+                    (
+                        "Tx freq {freq} is out "
+                        "of supported range of this radio.\n"
+                        "But I'll let you do it anyway..."
+                    ).format(freq=format_freq(freq))
                 )
                 msgs.append(msg)
 
