@@ -3,6 +3,7 @@
 **.pyc
 **.orig
 **.rej
+.DS_Store
 dist
 build/bdist
 tools/cpep8.venv/
